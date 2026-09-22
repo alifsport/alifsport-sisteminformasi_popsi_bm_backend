@@ -1,0 +1,396 @@
+// Prisma Schema for SIPBM (Sistem Informasi Pencak Silat POPSI Bhayu Manunggal)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum UserRole {
+  admin
+  pelatih
+  anggota
+}
+
+enum UserStatus {
+  active
+  inactive
+  locked
+}
+
+enum Sabuk {
+  Belum_Sabuk
+  Merah_Strip_1
+  Merah_Strip_2
+  Merah_Strip_3
+  Biru_Polos
+  Biru_Strip_1
+  Biru_Strip_2
+  Biru_Strip_3
+  Hijau_Polos
+  Hijau_Strip_1
+  Hijau_Strip_2
+}
+
+enum JenisKelamin {
+  Laki_laki
+  Perempuan
+}
+
+enum StatusKeanggotaan {
+  Aktif
+  Tidak_Aktif
+  Pengurus
+  Pelatih
+}
+
+enum TipeLatihan {
+  Rutin
+  Khusus
+  Ujian
+  Kejuaraan
+  Peringatan
+}
+
+enum TargetPeserta {
+  Semua_Anggota
+  Sabuk_Putih_Hijau
+  Sabuk_Biru_Hitam
+  Aturan_Khusus
+}
+
+enum StatusJadwal {
+  Dijadwalkan
+  Berlangsung
+  Selesai
+  Dibatalkan
+}
+
+enum StatusPresensi {
+  Hadir
+  Izin
+  Alpa
+  Terlambat
+  Sakit
+}
+
+enum StatusPenugasan {
+  Aktif
+  Selesai
+  Dipindahkan
+}
+
+enum TingkatKejuaraan {
+  Club
+  Kabupaten
+  Provinsi
+  Nasional
+  Internasional
+}
+
+enum TipeNotifikasi {
+  jadwal
+  presensi
+  prestasi
+  sistem
+  transfer
+}
+
+enum StatusLokasi {
+  Aktif
+  Tidak_Aktif
+  Maintenance
+}
+
+enum AksiAudit {
+  create
+  update
+  delete
+  login
+  logout
+  export
+  restore
+}
+
+// ==================== TABLES ====================
+
+model users {
+  id                    String       @id @default(uuid()) @db.Uuid
+  email                 String       @unique @db.VarChar(255)
+  password_hash         String       @db.VarChar(255)
+  role                  UserRole
+  status                UserStatus   @default(active)
+  last_login_at         DateTime?    @db.Timestamptz
+  failed_login_attempts Int          @default(0)
+  locked_until          DateTime?    @db.Timestamptz
+  reset_token           String?      @db.VarChar(255)
+  reset_token_expires   DateTime?    @db.Timestamptz
+  created_at            DateTime     @default(now()) @db.Timestamptz
+  updated_at            DateTime     @default(now()) @db.Timestamptz
+
+  // Relations
+  anggota_profile       anggota_profiles?
+  pelatih_profile       pelatih_profiles?
+  audit_logs            audit_logs[]
+  notifications         notifications[]
+  presensi_input        presensi[]          @relation("PresensiInputOleh")
+  jadwal_created        jadwal_latihan[]    @relation("JadwalCreatedBy")
+  penugasan_created     penugasan[]         @relation("PenugasanCreatedBy")
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model anggota_profiles {
+  id                          String              @id @default(uuid()) @db.Uuid
+  user_id                     String              @unique @db.Uuid
+  id_anggota                  String              @unique @db.VarChar(20) // Format: AG001, AG002, etc.
+  nama_lengkap                String              @db.VarChar(100)
+  tempat_lahir                String              @db.VarChar(50)
+  tanggal_lahir               DateTime            @db.Date
+  jenis_kelamin               JenisKelamin
+  no_telepon                  String              @db.VarChar(15)
+  email_pribadi               String?             @db.VarChar(255)
+  foto_url                    String?             @db.VarChar(500)
+  sabuk                       Sabuk
+  tanggal_gabung              DateTime            @default(now()) @db.Date
+  status_keanggotaan          StatusKeanggotaan   @default(Aktif)
+  tempat_latihan_pertama_id   String?             @db.Uuid
+  tempat_latihan_saat_ini_id  String?             @db.Uuid
+  pelatih_pertama_id          String?             @db.Uuid
+  pelatih_saat_ini_id         String?             @db.Uuid
+  deleted_at                  DateTime?           @db.Timestamptz
+  created_at                  DateTime            @default(now()) @db.Timestamptz
+  updated_at                  DateTime            @default(now()) @db.Timestamptz
+
+  // Relations
+  user                        users               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  tempat_latihan_pertama      tempat_latihan?     @relation("AnggotaLokasiPertama", fields: [tempat_latihan_pertama_id], references: [id])
+  tempat_latihan_saat_ini     tempat_latihan?     @relation("AnggotaLokasiSaatIni", fields: [tempat_latihan_saat_ini_id], references: [id])
+  pelatih_pertama             pelatih_profiles?   @relation("AnggotaPelatihPertama", fields: [pelatih_pertama_id], references: [id])
+  pelatih_saat_ini            pelatih_profiles?   @relation("AnggotaPelatihSaatIni", fields: [pelatih_saat_ini_id], references: [id])
+  penugasan                   penugasan[]
+  presensi                    presensi[]
+  prestasi                    prestasi[]
+
+  @@index([nama_lengkap])
+  @@index([id_anggota])
+  @@index([sabuk])
+  @@index([status_keanggotaan])
+  @@index([tanggal_gabung])
+  @@map("anggota_profiles")
+}
+
+model pelatih_profiles {
+  id                 String            @id @default(uuid()) @db.Uuid
+  user_id            String            @unique @db.Uuid
+  id_pelatih         String            @unique @db.VarChar(20) // Format: PLT-YYYY-XXXX
+  nama_lengkap       String            @db.VarChar(100)
+  tempat_lahir       String            @db.VarChar(50)
+  tanggal_lahir      DateTime          @db.Date
+  jenis_kelamin      JenisKelamin
+  alamat             String            @db.Text
+  no_telepon         String            @db.VarChar(15)
+  email_pribadi      String?           @db.VarChar(255)
+  foto_url           String?           @db.VarChar(500)
+  sabuk              Sabuk
+  tempat_melatih_id  String?           @db.Uuid
+  deleted_at         DateTime?         @db.Timestamptz
+  tanggal_gabung     DateTime          @default(now()) @db.Date
+  created_at         DateTime          @default(now()) @db.Timestamptz
+  updated_at         DateTime          @default(now()) @db.Timestamptz
+
+  // Relations
+  user               users             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  tempat_melatih     tempat_latihan?   @relation("PelatihLokasi", fields: [tempat_melatih_id], references: [id])
+  lokasi_pj          tempat_latihan[]  @relation("LokasiPelatihPJ")
+  jadwal_latihan     jadwal_latihan[]
+  anggota_pertama    anggota_profiles[] @relation("AnggotaPelatihPertama")
+  anggota_saat_ini   anggota_profiles[] @relation("AnggotaPelatihSaatIni")
+
+  @@index([nama_lengkap])
+  @@index([id_pelatih])
+  @@index([sabuk])
+  @@map("pelatih_profiles")
+}
+
+model tempat_latihan {
+  id                String        @id @default(uuid()) @db.Uuid
+  id_lokasi         String        @unique @db.VarChar(20) // Format: LOC-XXXX
+  nama              String        @unique @db.VarChar(100)
+  alamat            String?       @db.Text
+  kota              String        @db.VarChar(50)
+  provinsi          String        @db.VarChar(50)
+  kecamatan         String?       @db.VarChar(50)
+  kelurahan         String?       @db.VarChar(50)
+  desa              String?       @db.VarChar(50)
+  kode_pos          String?       @db.VarChar(5)
+  jam_operasional   String        @db.VarChar(255)
+  kapasitas         Int
+  pelatih_pj_id     String?       @db.Uuid
+  foto_urls         String[]      // Array of photo URLs
+  status            StatusLokasi  @default(Aktif)
+  created_at        DateTime      @default(now()) @db.Timestamptz
+  updated_at        DateTime      @default(now()) @db.Timestamptz
+
+  // Relations
+  pelatih_pj        pelatih_profiles? @relation("LokasiPelatihPJ", fields: [pelatih_pj_id], references: [id], onDelete: SetNull)
+  pelatih_list      pelatih_profiles[] @relation("PelatihLokasi")
+  jadwal_latihan    jadwal_latihan[]
+  penugasan         penugasan[]
+  anggota_pertama   anggota_profiles[] @relation("AnggotaLokasiPertama")
+  anggota_saat_ini  anggota_profiles[] @relation("AnggotaLokasiSaatIni")
+
+  @@index([nama])
+  @@index([kota])
+  @@index([status])
+  @@map("tempat_latihan")
+}
+
+model jadwal_latihan {
+  id              String          @id @default(uuid()) @db.Uuid
+  judul_materi    String          @db.VarChar(100)
+  tanggal         DateTime        @db.Date
+  jam_mulai       DateTime        @db.Timestamptz
+  jam_selesai     DateTime        @db.Timestamptz
+  tempat_id       String          @db.Uuid
+  pelatih_id      String          @db.Uuid
+  tipe_latihan    TipeLatihan
+  target_peserta  TargetPeserta
+  hari            String?         @db.VarChar(10) // Senin, Selasa, etc. (for Rutin)
+  catatan         String?         @db.Text
+  seri_id         String?         @db.Uuid // Series ID for recurring schedules
+  status          StatusJadwal    @default(Dijadwalkan)
+  created_by      String          @db.Uuid
+  created_at      DateTime        @default(now()) @db.Timestamptz
+  updated_at      DateTime        @default(now()) @db.Timestamptz
+
+  // Relations
+  tempat          tempat_latihan  @relation(fields: [tempat_id], references: [id])
+  pelatih         pelatih_profiles @relation(fields: [pelatih_id], references: [id])
+  creator         users           @relation("JadwalCreatedBy", fields: [created_by], references: [id])
+  presensi        presensi[]
+
+  @@index([tanggal])
+  @@index([tempat_id])
+  @@index([pelatih_id])
+  @@index([status])
+  @@index([seri_id])
+  @@map("jadwal_latihan")
+}
+
+model presensi {
+  id              String          @id @default(uuid()) @db.Uuid
+  jadwal_id       String          @db.Uuid
+  anggota_id      String          @db.Uuid
+  tanggal         DateTime        @db.Date
+  status          StatusPresensi
+  keterangan      String?         @db.Text
+  catatan_umum    String?         @db.Text
+  input_oleh      String          @db.Uuid
+  waktu_input     DateTime        @default(now()) @db.Timestamptz
+  created_at      DateTime        @default(now()) @db.Timestamptz
+  updated_at      DateTime        @default(now()) @db.Timestamptz
+
+  // Relations
+  jadwal          jadwal_latihan  @relation(fields: [jadwal_id], references: [id])
+  anggota         anggota_profiles @relation(fields: [anggota_id], references: [id])
+  input_by        users           @relation("PresensiInputOleh", fields: [input_oleh], references: [id])
+
+  @@unique([jadwal_id, anggota_id, tanggal])
+  @@index([jadwal_id])
+  @@index([anggota_id])
+  @@index([tanggal])
+  @@index([status])
+  @@map("presensi")
+}
+
+model penugasan {
+  id              String            @id @default(uuid()) @db.Uuid
+  anggota_id      String            @db.Uuid
+  tempat_id       String            @db.Uuid
+  tanggal_mulai   DateTime          @db.Date
+  tanggal_selesai DateTime?         @db.Date
+  alasan          String?           @db.Text
+  status          StatusPenugasan   @default(Aktif)
+  created_by      String            @db.Uuid
+  created_at      DateTime          @default(now()) @db.Timestamptz
+
+  // Relations
+  anggota         anggota_profiles  @relation(fields: [anggota_id], references: [id])
+  tempat          tempat_latihan    @relation(fields: [tempat_id], references: [id])
+  creator         users             @relation("PenugasanCreatedBy", fields: [created_by], references: [id])
+
+  @@index([anggota_id])
+  @@index([tempat_id])
+  @@index([status])
+  @@map("penugasan")
+}
+
+model prestasi {
+  id                String              @id @default(uuid()) @db.Uuid
+  anggota_id        String              @db.Uuid
+  nama_kejuaraan    String              @db.VarChar(200)
+  tingkat           TingkatKejuaraan
+  tanggal           DateTime            @db.Date
+  perolehan         String              @db.VarChar(100)
+  kategori          String              @db.VarChar(50)
+  lokasi_kejuaraan  String              @db.VarChar(200)
+  catatan           String?             @db.Text
+  file_url          String?             @db.VarChar(500)
+  created_at        DateTime            @default(now()) @db.Timestamptz
+
+  // Relations
+  anggota           anggota_profiles    @relation(fields: [anggota_id], references: [id])
+
+  @@index([anggota_id])
+  @@index([tingkat])
+  @@index([tanggal])
+  @@map("prestasi")
+}
+
+model notifications {
+  id          String          @id @default(uuid()) @db.Uuid
+  user_id     String          @db.Uuid
+  judul       String          @db.VarChar(200)
+  pesan       String          @db.Text
+  tipe        TipeNotifikasi
+  link        String?         @db.VarChar(500)
+  dibaca      Boolean         @default(false)
+  created_at  DateTime        @default(now()) @db.Timestamptz
+
+  // Relations
+  user        users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([dibaca])
+  @@index([created_at])
+  @@map("notifications")
+}
+
+model audit_logs {
+  id          String      @id @default(uuid()) @db.Uuid
+  user_id     String?     @db.Uuid
+  aksi        String      @db.VarChar(50)
+  entitas     String      @db.VarChar(50)
+  entitas_id  String?     @db.Uuid
+  detail      Json?
+  ip_address  String?     @db.VarChar(45)
+  user_agent  String?     @db.VarChar(500)
+  created_at  DateTime    @default(now()) @db.Timestamptz
+
+  // Relations
+  user        users?      @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([entitas])
+  @@index([aksi])
+  @@index([created_at])
+  @@map("audit_logs")
+}
