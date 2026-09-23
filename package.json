@@ -6,8 +6,8 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "tsc || true",
-    "start": "node dist/app.js",
+    "build": "echo 'Using ts-node, no build needed'",
+    "start": "ts-node --transpile-only src/app.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
