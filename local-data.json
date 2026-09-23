@@ -1,0 +1,541 @@
+{
+  "users": [
+    {
+      "id": "a7d1a3b3-cf79-4020-b57d-f44f0dea4861",
+      "email": "ahmad.fauzi@bmayu.com",
+      "role": "anggota",
+      "status": "active"
+    },
+    {
+      "id": "a5c35533-bd94-4fb6-b7f2-ab3607b24f4b",
+      "email": "dewi.lestari@bmayu.com",
+      "role": "anggota",
+      "status": "active"
+    },
+    {
+      "id": "c8111d2d-1615-4dd7-a7bc-c4695754a667",
+      "email": "riko.pratama@bmayu.com",
+      "role": "anggota",
+      "status": "active"
+    },
+    {
+      "id": "40c70e49-a568-4433-8e3f-195a61f8cb98",
+      "email": "putri.handayani@bmayu.com",
+      "role": "anggota",
+      "status": "active"
+    },
+    {
+      "id": "904cfa05-b01c-437a-b002-7f6847cfd1ad",
+      "email": "farhan.maulana@bmayu.com",
+      "role": "anggota",
+      "status": "active"
+    },
+    {
+      "id": "e7460ca4-f3a6-4511-82d6-8c6a38baa188",
+      "email": "poncoteguh@gmail.com",
+      "role": "pelatih",
+      "status": "active"
+    },
+    {
+      "id": "5e94b33b-1ebb-4923-aa43-dce6405c326e",
+      "email": "admin@bmayu.com",
+      "role": "admin",
+      "status": "active"
+    },
+    {
+      "id": "87a2ed54-7f7e-4d73-a8c7-08282cee090a",
+      "email": "ag008@sipbm.local",
+      "role": "anggota",
+      "status": "active"
+    },
+    {
+      "id": "c8711246-210e-4d10-8f29-c30eacce7ccd",
+      "email": "alif@bhayumanunggal.com",
+      "role": "pelatih",
+      "status": "inactive"
+    },
+    {
+      "id": "297a58bf-2e1d-4d16-b3dc-dfcb5ef8a936",
+      "email": "ag007@sipbm.local",
+      "role": "anggota",
+      "status": "inactive"
+    },
+    {
+      "id": "5c309584-8aab-459c-a869-d4693e4feef1",
+      "email": "aliffajar486@gmail.com",
+      "role": "pelatih",
+      "status": "inactive"
+    },
+    {
+      "id": "583545b8-27dc-49df-a334-e70b08c33376",
+      "email": "supardigudel@gmail.com",
+      "role": "pelatih",
+      "status": "active"
+    },
+    {
+      "id": "4d6c3fca-34b6-4009-a941-1b5ba5263237",
+      "email": "admin@bhayumanunggal.com",
+      "role": "admin",
+      "status": "active"
+    },
+    {
+      "id": "a4fe4f71-bb4e-4b47-b413-d154e9d475d5",
+      "email": "ag009@sipbm.local",
+      "role": "anggota",
+      "status": "active"
+    }
+  ],
+  "anggota": [
+    {
+      "id": "8fe9422c-fa89-4fb7-8da3-e733647481d5",
+      "user_id": "a4fe4f71-bb4e-4b47-b413-d154e9d475d5",
+      "id_anggota": "AG009",
+      "nama_lengkap": "Ahmad Fauzi",
+      "tempat_lahir": "Bandung",
+      "tanggal_lahir": "1995-03-15T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "no_telepon": "081234567890",
+      "email_pribadi": "ahmad@gmail.com",
+      "foto_url": null,
+      "sabuk": "Biru_Polos",
+      "tanggal_gabung": "2023-01-15T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": null,
+      "tempat_latihan_saat_ini_id": null,
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": null,
+      "created_at": "2026-09-22T10:11:30.442Z",
+      "updated_at": "2026-09-22T10:11:30.442Z",
+      "user": {
+        "email": "ag009@sipbm.local",
+        "password_hash": "$2a$12$YRzLzXsYL9nCFsSCPHJe/eKc0tMTU/bD6mX28aUgjeAWAjOxJMos2"
+      }
+    },
+    {
+      "id": "a1a1d679-7f9d-4a14-ae47-353c6ae9ab93",
+      "user_id": "87a2ed54-7f7e-4d73-a8c7-08282cee090a",
+      "id_anggota": "AG008",
+      "nama_lengkap": "M Fajrul Hanan",
+      "tempat_lahir": "Jakarta",
+      "tanggal_lahir": "2010-11-11T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "no_telepon": "0882183218321",
+      "email_pribadi": "mfajrulhanan@gmail.com",
+      "foto_url": null,
+      "sabuk": "Belum_Sabuk",
+      "tanggal_gabung": "2024-09-19T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": "e4967536-d455-4861-bd75-4df265d044bf",
+      "tempat_latihan_saat_ini_id": "e4967536-d455-4861-bd75-4df265d044bf",
+      "pelatih_pertama_id": "cdc7e454-01d0-4249-9021-86c9989f11be",
+      "pelatih_saat_ini_id": "cdc7e454-01d0-4249-9021-86c9989f11be",
+      "deleted_at": null,
+      "created_at": "2026-09-19T14:20:38.551Z",
+      "updated_at": "2026-09-19T14:20:38.551Z",
+      "user": {
+        "email": "ag008@sipbm.local",
+        "password_hash": "$2a$12$ZwE5Da.OPCtuZmymZbFPVeUthGEdmB7aGQJF1hUNs8ILkUYY7/sU2"
+      }
+    },
+    {
+      "id": "e88d43b8-0b58-4805-9f8f-203e39046786",
+      "user_id": "a5c35533-bd94-4fb6-b7f2-ab3607b24f4b",
+      "id_anggota": "AG002",
+      "nama_lengkap": "Dewi Lestari",
+      "tempat_lahir": "Bandung",
+      "tanggal_lahir": "2001-08-14T00:00:00.000Z",
+      "jenis_kelamin": "Perempuan",
+      "no_telepon": "081234567802",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Hijau_Polos",
+      "tanggal_gabung": "2026-01-15T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": "7544a4ac-a634-4af5-9548-df47a71fd4a3",
+      "tempat_latihan_saat_ini_id": "7544a4ac-a634-4af5-9548-df47a71fd4a3",
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": "2026-09-18T08:11:38.292Z",
+      "created_at": "2026-09-07T10:51:48.017Z",
+      "updated_at": "2026-09-07T10:51:48.017Z",
+      "user": {
+        "email": "dewi.lestari@bmayu.com",
+        "password_hash": "$2a$12$yRSWIXhliD3ebVnfQeqsBuJL.TMsMoo4L2HuknUqIzdk8qKifVJJi"
+      }
+    },
+    {
+      "id": "c15c23b1-9cf4-413c-9b26-fa352020104e",
+      "user_id": "904cfa05-b01c-437a-b002-7f6847cfd1ad",
+      "id_anggota": "AG005",
+      "nama_lengkap": "Farhan Maulana",
+      "tempat_lahir": "Bandung",
+      "tanggal_lahir": "2003-07-17T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "no_telepon": "081234567805",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Belum_Sabuk",
+      "tanggal_gabung": "2026-01-15T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": "7544a4ac-a634-4af5-9548-df47a71fd4a3",
+      "tempat_latihan_saat_ini_id": "7544a4ac-a634-4af5-9548-df47a71fd4a3",
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": "2026-09-18T08:11:46.312Z",
+      "created_at": "2026-09-07T10:51:48.042Z",
+      "updated_at": "2026-09-07T10:51:48.042Z",
+      "user": {
+        "email": "farhan.maulana@bmayu.com",
+        "password_hash": "$2a$12$yRSWIXhliD3ebVnfQeqsBuJL.TMsMoo4L2HuknUqIzdk8qKifVJJi"
+      }
+    },
+    {
+      "id": "ca814463-b654-4dba-827b-bd12f64a9ecd",
+      "user_id": "297a58bf-2e1d-4d16-b3dc-dfcb5ef8a936",
+      "id_anggota": "AG007",
+      "nama_lengkap": "Alif Fajar Imannudin",
+      "tempat_lahir": "Bandar Lampung",
+      "tanggal_lahir": "1997-10-11T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "no_telepon": "081284101560",
+      "email_pribadi": "alif@bhayumanunggal.com",
+      "foto_url": null,
+      "sabuk": "Biru_Polos",
+      "tanggal_gabung": "2014-09-01T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": "652854ca-fb86-4bdc-a59e-876a602c6412",
+      "tempat_latihan_saat_ini_id": "652854ca-fb86-4bdc-a59e-876a602c6412",
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": null,
+      "created_at": "2026-09-13T10:16:06.228Z",
+      "updated_at": "2026-09-13T10:16:06.228Z",
+      "user": {
+        "email": "ag007@sipbm.local",
+        "password_hash": "$2a$12$Jn2IE46vibBRPrKs1uerMObqqRFgs/DI9P53hSNZF7hdJe/65VrQe"
+      }
+    },
+    {
+      "id": "2a112024-3880-4dd0-b417-067be6f398ca",
+      "user_id": "c8111d2d-1615-4dd7-a7bc-c4695754a667",
+      "id_anggota": "AG003",
+      "nama_lengkap": "Riko Pratama",
+      "tempat_lahir": "Surabaya",
+      "tanggal_lahir": "1999-12-05T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "no_telepon": "081234567803",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Biru_Strip_2",
+      "tanggal_gabung": "2026-01-15T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": null,
+      "tempat_latihan_saat_ini_id": null,
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": "2026-09-18T08:11:40.459Z",
+      "created_at": "2026-09-07T10:51:48.027Z",
+      "updated_at": "2026-09-07T10:51:48.027Z",
+      "user": {
+        "email": "riko.pratama@bmayu.com",
+        "password_hash": "$2a$12$yRSWIXhliD3ebVnfQeqsBuJL.TMsMoo4L2HuknUqIzdk8qKifVJJi"
+      }
+    },
+    {
+      "id": "f3f730aa-6c07-4e6c-8045-0226f3726c35",
+      "user_id": "a7d1a3b3-cf79-4020-b57d-f44f0dea4861",
+      "id_anggota": "AG001",
+      "nama_lengkap": "Ahmad Fauzi",
+      "tempat_lahir": "Jakarta",
+      "tanggal_lahir": "2000-05-20T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "no_telepon": "081234567801",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Biru_Polos",
+      "tanggal_gabung": "2026-01-15T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": null,
+      "tempat_latihan_saat_ini_id": null,
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": "2026-09-18T08:11:35.889Z",
+      "created_at": "2026-09-07T10:51:48.009Z",
+      "updated_at": "2026-09-07T10:51:48.009Z",
+      "user": {
+        "email": "ahmad.fauzi@bmayu.com",
+        "password_hash": "$2a$12$yRSWIXhliD3ebVnfQeqsBuJL.TMsMoo4L2HuknUqIzdk8qKifVJJi"
+      }
+    },
+    {
+      "id": "04eab813-22c4-491f-b086-fe6e822e1d8a",
+      "user_id": "40c70e49-a568-4433-8e3f-195a61f8cb98",
+      "id_anggota": "AG004",
+      "nama_lengkap": "Putri Handayani",
+      "tempat_lahir": "Jakarta",
+      "tanggal_lahir": "2002-02-28T00:00:00.000Z",
+      "jenis_kelamin": "Perempuan",
+      "no_telepon": "081234567804",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Merah_Strip_2",
+      "tanggal_gabung": "2026-01-15T00:00:00.000Z",
+      "status_keanggotaan": "Aktif",
+      "tempat_latihan_pertama_id": null,
+      "tempat_latihan_saat_ini_id": null,
+      "pelatih_pertama_id": null,
+      "pelatih_saat_ini_id": null,
+      "deleted_at": "2026-09-18T08:11:42.851Z",
+      "created_at": "2026-09-07T10:51:48.034Z",
+      "updated_at": "2026-09-07T10:51:48.034Z",
+      "user": {
+        "email": "putri.handayani@bmayu.com",
+        "password_hash": "$2a$12$yRSWIXhliD3ebVnfQeqsBuJL.TMsMoo4L2HuknUqIzdk8qKifVJJi"
+      }
+    }
+  ],
+  "pelatih": [
+    {
+      "id": "7ef2aa19-2016-41da-bcd7-584ff072081d",
+      "user_id": "5c309584-8aab-459c-a869-d4693e4feef1",
+      "id_pelatih": "PLT-2026-0005",
+      "nama_lengkap": "Alif Fajar Imannudin",
+      "tempat_lahir": "Bandar Lampung",
+      "tanggal_lahir": "1997-10-11T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "alamat": "Kp. Tengah RT06/03 , Desa Cipeucang, Kec. Cileungsi",
+      "no_telepon": "081284101560",
+      "email_pribadi": "aliffajar486@gmail.com",
+      "foto_url": null,
+      "sabuk": "Biru_Polos",
+      "tempat_melatih_id": null,
+      "deleted_at": null,
+      "tanggal_gabung": "2014-09-18T00:00:00.000Z",
+      "created_at": "2026-09-18T10:57:58.690Z",
+      "updated_at": "2026-09-18T10:57:58.690Z",
+      "user": {
+        "email": "aliffajar486@gmail.com",
+        "password_hash": "$2a$12$P5Cjy.6R7mW2eJAmFh6SZu001WP.1jmRMkZAI9Q5zw9im38jgCoHG"
+      }
+    },
+    {
+      "id": "a9f3d5e0-5b14-4a58-966d-d4ad0f0d24f4",
+      "user_id": "c8711246-210e-4d10-8f29-c30eacce7ccd",
+      "id_pelatih": "PLT-2026-0004",
+      "nama_lengkap": "Alif Fajar Imannudin",
+      "tempat_lahir": "Bandar Lampung",
+      "tanggal_lahir": "1997-10-11T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "alamat": "Jonggol",
+      "no_telepon": "081284101560",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Biru_Polos",
+      "tempat_melatih_id": null,
+      "deleted_at": "2026-09-18T12:11:59.110Z",
+      "tanggal_gabung": "2014-09-07T00:00:00.000Z",
+      "created_at": "2026-09-07T10:55:11.037Z",
+      "updated_at": "2026-09-07T10:55:11.037Z",
+      "user": {
+        "email": "alif@bhayumanunggal.com",
+        "password_hash": "$2a$12$JTuuCu5z7oAcXAo2m/lSXOz5BDIjZopaCFuDq6oeSVPmrMKAtuX/W"
+      }
+    },
+    {
+      "id": "cdc7e454-01d0-4249-9021-86c9989f11be",
+      "user_id": "e7460ca4-f3a6-4511-82d6-8c6a38baa188",
+      "id_pelatih": "PLT-2026-0006",
+      "nama_lengkap": "Ponco Teguh",
+      "tempat_lahir": "Yogyakarta",
+      "tanggal_lahir": "1975-11-11T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "alamat": "Tes testes",
+      "no_telepon": "0812821838123",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Hijau_Strip_2",
+      "tempat_melatih_id": null,
+      "deleted_at": null,
+      "tanggal_gabung": "1980-09-19T00:00:00.000Z",
+      "created_at": "2026-09-19T14:03:09.542Z",
+      "updated_at": "2026-09-19T14:03:09.542Z",
+      "user": {
+        "email": "poncoteguh@gmail.com",
+        "password_hash": "$2a$12$ZGNwb7n4/kdqcTdnMtzXXORLMejAEahQCd7uBRLDZhG3VHYET1/bi"
+      }
+    },
+    {
+      "id": "1f6a43df-cddb-429d-90da-7c18a772f824",
+      "user_id": "583545b8-27dc-49df-a334-e70b08c33376",
+      "id_pelatih": "PLT-2026-0007",
+      "nama_lengkap": "Supardi Gudel",
+      "tempat_lahir": "Kota Yogyakarta",
+      "tanggal_lahir": "1985-11-11T00:00:00.000Z",
+      "jenis_kelamin": "Laki_laki",
+      "alamat": "Dayeuh kolot",
+      "no_telepon": "0812318231",
+      "email_pribadi": null,
+      "foto_url": null,
+      "sabuk": "Hijau_Polos",
+      "tempat_melatih_id": null,
+      "deleted_at": null,
+      "tanggal_gabung": "1990-09-21T00:00:00.000Z",
+      "created_at": "2026-09-21T12:34:17.458Z",
+      "updated_at": "2026-09-21T12:34:17.458Z",
+      "user": {
+        "email": "supardigudel@gmail.com",
+        "password_hash": "$2a$12$MIuZV7jQvHCzdeM9PcV6TOY5Tww3OymsYxw8cnHMuMX5NMzXMtylG"
+      }
+    }
+  ],
+  "lokasi": [
+    {
+      "id": "e4967536-d455-4861-bd75-4df265d044bf",
+      "id_lokasi": "LOC-0005",
+      "nama": "Padepokan Bhayu Manunggal Cipayung",
+      "alamat": null,
+      "kota": "Kota Administrasi Jakarta Timur",
+      "provinsi": "DKI Jakarta",
+      "kecamatan": "Cipayung",
+      "kelurahan": "Kramat Jati",
+      "desa": "Kramat Jati",
+      "kode_pos": "13510",
+      "jam_operasional": "-",
+      "kapasitas": 50,
+      "pelatih_pj_id": "cdc7e454-01d0-4249-9021-86c9989f11be",
+      "foto_urls": [],
+      "status": "Aktif",
+      "created_at": "2026-09-19T14:02:03.686Z",
+      "updated_at": "2026-09-19T14:12:54.134Z"
+    },
+    {
+      "id": "d0cebedf-5888-41fc-adb9-f6d47904a417",
+      "id_lokasi": "LOC-0006",
+      "nama": "Dayeuh Kolot",
+      "alamat": null,
+      "kota": "Kabupaten Bandung",
+      "provinsi": "Jawa Barat",
+      "kecamatan": "Dayeuhkolot",
+      "kelurahan": null,
+      "desa": null,
+      "kode_pos": null,
+      "jam_operasional": "-",
+      "kapasitas": 41,
+      "pelatih_pj_id": "1f6a43df-cddb-429d-90da-7c18a772f824",
+      "foto_urls": [],
+      "status": "Aktif",
+      "created_at": "2026-09-21T12:35:10.494Z",
+      "updated_at": "2026-09-21T12:35:10.494Z"
+    },
+    {
+      "id": "652854ca-fb86-4bdc-a59e-876a602c6412",
+      "id_lokasi": "LOC-0004",
+      "nama": "Madinatul Quran Jonggol",
+      "alamat": null,
+      "kota": "Kota Bogor",
+      "provinsi": "Jawa Barat",
+      "kecamatan": "Bogor Timur",
+      "kelurahan": null,
+      "desa": null,
+      "kode_pos": "16111",
+      "jam_operasional": "-",
+      "kapasitas": 50,
+      "pelatih_pj_id": null,
+      "foto_urls": [],
+      "status": "Aktif",
+      "created_at": "2026-09-07T10:56:20.525Z",
+      "updated_at": "2026-09-19T14:08:27.383Z"
+    },
+    {
+      "id": "7544a4ac-a634-4af5-9548-df47a71fd4a3",
+      "id_lokasi": "LOC-0002",
+      "nama": "Padepokan Bhayu Manunggal",
+      "alamat": "Jl. Pahlawan No. 45, Kel. Burangrang, Kec. Lengkong",
+      "kota": "Kota Bandung",
+      "provinsi": "Jawa Barat",
+      "kecamatan": null,
+      "kelurahan": null,
+      "desa": null,
+      "kode_pos": null,
+      "jam_operasional": "Selasa-Kamis 19:00-21:30, Sabtu 09:00-12:00",
+      "kapasitas": 40,
+      "pelatih_pj_id": null,
+      "foto_urls": [],
+      "status": "Aktif",
+      "created_at": "2026-09-07T10:51:47.147Z",
+      "updated_at": "2026-09-07T10:51:47.147Z"
+    }
+  ],
+  "jadwal": [
+    {
+      "id": "40bf66fb-5228-4b7c-9b6f-c404ea226081",
+      "judul_materi": "Latihan Tambahan — Latihan Khusus Sabuk Biru",
+      "tanggal": "2026-09-27T00:00:00.000Z",
+      "jam_mulai": "2026-09-27T00:00:00.000Z",
+      "jam_selesai": "2026-09-27T09:00:00.000Z",
+      "tempat_id": "e4967536-d455-4861-bd75-4df265d044bf",
+      "pelatih_id": "cdc7e454-01d0-4249-9021-86c9989f11be",
+      "tipe_latihan": "Khusus",
+      "target_peserta": "Semua_Anggota",
+      "hari": null,
+      "catatan": "Latihan Khusus Sabuk Biru",
+      "seri_id": null,
+      "status": "Dijadwalkan",
+      "created_by": "5e94b33b-1ebb-4923-aa43-dce6405c326e",
+      "created_at": "2026-09-19T14:14:13.025Z",
+      "updated_at": "2026-09-19T14:14:13.025Z"
+    },
+    {
+      "id": "54fbec49-5e22-4c36-8ab1-645e9a6abf89",
+      "judul_materi": "Latihan Rutin Sabtu",
+      "tanggal": "2026-09-26T00:00:00.000Z",
+      "jam_mulai": "2026-09-26T02:00:00.000Z",
+      "jam_selesai": "2026-09-26T05:00:00.000Z",
+      "tempat_id": "e4967536-d455-4861-bd75-4df265d044bf",
+      "pelatih_id": "cdc7e454-01d0-4249-9021-86c9989f11be",
+      "tipe_latihan": "Rutin",
+      "target_peserta": "Semua_Anggota",
+      "hari": "Sabtu",
+      "catatan": null,
+      "seri_id": null,
+      "status": "Dijadwalkan",
+      "created_by": "5e94b33b-1ebb-4923-aa43-dce6405c326e",
+      "created_at": "2026-09-19T14:02:03.734Z",
+      "updated_at": "2026-09-19T14:02:03.734Z"
+    },
+    {
+      "id": "a2e52ab0-5def-4900-8582-587b91aa01cd",
+      "judul_materi": "Latihan Rutin Minggu",
+      "tanggal": "2026-09-27T00:00:00.000Z",
+      "jam_mulai": "2026-09-27T00:00:00.000Z",
+      "jam_selesai": "2026-09-27T03:00:00.000Z",
+      "tempat_id": "d0cebedf-5888-41fc-adb9-f6d47904a417",
+      "pelatih_id": "1f6a43df-cddb-429d-90da-7c18a772f824",
+      "tipe_latihan": "Rutin",
+      "target_peserta": "Semua_Anggota",
+      "hari": "Minggu",
+      "catatan": null,
+      "seri_id": null,
+      "status": "Dijadwalkan",
+      "created_by": "4d6c3fca-34b6-4009-a941-1b5ba5263237",
+      "created_at": "2026-09-21T12:35:10.518Z",
+      "updated_at": "2026-09-21T12:35:10.518Z"
+    }
+  ],
+  "presensi": [
+    {
+      "id": "d67a5473-9e50-4e69-a8da-a8fca2e7d1c1",
+      "jadwal_id": "54fbec49-5e22-4c36-8ab1-645e9a6abf89",
+      "anggota_id": "a1a1d679-7f9d-4a14-ae47-353c6ae9ab93",
+      "tanggal": "2026-09-25T00:00:00.000Z",
+      "status": "Hadir",
+      "keterangan": null,
+      "catatan_umum": null,
+      "input_oleh": "4d6c3fca-34b6-4009-a941-1b5ba5263237",
+      "waktu_input": "2026-09-19T17:32:06.665Z",
+      "created_at": "2026-09-19T17:32:06.665Z",
+      "updated_at": "2026-09-19T17:32:06.665Z"
+    }
+  ]
+}
