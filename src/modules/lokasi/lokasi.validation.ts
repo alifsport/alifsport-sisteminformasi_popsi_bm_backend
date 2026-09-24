@@ -42,7 +42,7 @@ export const updateLokasiSchema = z.object({
 export const queryLokasiSchema = z.object({
   query: z.object({
     page: z.coerce.number().int().positive().optional().default(1),
-    limit: z.coerce.number().int().positive().max(100).optional().default(10),
+    limit: z.coerce.number().int().positive().max(500).optional().default(10),
     search: z.string().optional(),
     status: z.enum(['Aktif', 'Tidak_Aktif', 'Maintenance']).optional(),
     kota: z.string().optional(),
