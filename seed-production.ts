@@ -53,6 +53,7 @@ async function main() {
   console.log('🗑️  Clearing existing data...');
   await prisma.presensi.deleteMany();
   await prisma.jadwal_latihan.deleteMany();
+  await prisma.penugasan.deleteMany();
   await prisma.anggota_profiles.deleteMany();
   await prisma.pelatih_profiles.deleteMany();
   await prisma.tempat_latihan.deleteMany();
