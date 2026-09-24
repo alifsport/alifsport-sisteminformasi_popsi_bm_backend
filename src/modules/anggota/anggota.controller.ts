@@ -124,6 +124,21 @@ export class AnggotaController {
     }
   }
 
+  // POST /api/anggota/bulk-delete - Bulk soft delete
+  static async bulkDelete(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const { ids } = req.body;
+      const result = await AnggotaService.bulkDelete(ids);
+      res.json({
+        success: true,
+        message: `${result.deleted} anggota berhasil diarsipkan`,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // POST /api/anggota/:id/restore - Restore soft-deleted anggota
   static async restore(req: AuthRequest, res: Response, next: NextFunction) {
     try {

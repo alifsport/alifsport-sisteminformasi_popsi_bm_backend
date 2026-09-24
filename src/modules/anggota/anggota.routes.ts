@@ -41,6 +41,9 @@ router.put('/:id', validate(updateAnggotaSchema), AnggotaController.update);
 // DELETE /api/anggota/:id - Soft delete (archive) anggota
 router.delete('/:id', validate(anggotaIdParamSchema), AnggotaController.delete);
 
+// POST /api/anggota/bulk-delete - Bulk soft delete
+router.post('/bulk-delete', AnggotaController.bulkDelete);
+
 // POST /api/anggota/:id/restore - Restore archived anggota
 router.post('/:id/restore', validate(anggotaIdParamSchema), AnggotaController.restore);
 

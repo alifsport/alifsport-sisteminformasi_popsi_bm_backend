@@ -305,6 +305,36 @@ export class AnggotaService {
     return updated;
   }
 
+  // ==================== BULK DELETE ====================
+  static async bulkDelete(ids: string[]) {
+    if (!ids || ids.length === 0) throw new Error('Pilih minimal 1 anggota untuk dihapus');
+
+    const existing = await prisma.anggota_profiles.findMany({
+      where: { id: { in: ids }, deleted_at: null },
+    });
+
+    if (existing.length === 0) throw new NotFoundError('Tidak ada anggota yang bisa diarsipkan');
+
+    const result = await prisma.anggota_profiles.updateMany({
+      where: { id: { in: existing.map(a => a.id) } },
+      data: { deleted_at: new Date() },
+    });
+
+    // Audit log for each
+    for (const a of existing) {
+      await prisma.audit_logs.create({
+        data: {
+          aksi: 'delete',
+          entitas: 'anggota_profiles',
+          entitas_id: a.id,
+          detail: { id_anggota: a.id_anggota, nama_lengkap: a.nama_lengkap, bulk: true },
+        },
+      }).catch(() => {});
+    }
+
+    return { deleted: result.count };
+  }
+
   // ==================== RESTORE ====================
   static async restore(id: string) {
     const existing = await prisma.anggota_profiles.findUnique({ where: { id } });
