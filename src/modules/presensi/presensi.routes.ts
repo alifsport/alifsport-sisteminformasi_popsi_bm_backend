@@ -9,6 +9,9 @@ const router = Router();
 
 router.use(authenticate);
 
+// GET /presensi/lokasi-saya — lokasi yang menjadi PJ pelatih ini (harus sebelum /:id routes)
+router.get('/lokasi-saya', authorize('pelatih'), PresensiController.getLokasiSaya);
+
 // GET /presensi/anggota-by-lokasi/:lokasiId — ambil anggota aktif per lokasi (harus sebelum /:id routes)
 router.get('/anggota-by-lokasi/:lokasiId', authorize('admin', 'pelatih'), PresensiController.getAnggotaByLokasi);
 

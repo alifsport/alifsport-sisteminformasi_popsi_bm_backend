@@ -4,6 +4,16 @@ import { AuthRequest } from '../../types';
 
 export class PresensiController {
 
+  // GET /presensi/lokasi-saya — lokasi yang menjadi PJ pelatih ini
+  static async getLokasiSaya(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const result = await PresensiService.getLokasiSaya(req.user!.id);
+      res.json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // GET /presensi/anggota-by-lokasi/:lokasiId
   static async getAnggotaByLokasi(req: AuthRequest, res: Response, next: NextFunction) {
     try {

@@ -3,6 +3,33 @@ import { AppError, NotFoundError, ForbiddenError } from '../../middleware/errorH
 
 export class PresensiService {
 
+  // ==================== GET LOKASI SAJA (PJ only) ====================
+  static async getLokasiSaya(userId: string) {
+    const pelatih = await prisma.pelatih_profiles.findFirst({
+      where: { user_id: userId, deleted_at: null },
+      select: { id: true },
+    });
+    if (!pelatih) throw new NotFoundError('Profil pelatih tidak ditemukan');
+
+    const lokasi = await prisma.tempat_latihan.findMany({
+      where: {
+        pelatih_pj_id: pelatih.id,
+        status: 'Aktif',
+      },
+      select: {
+        id: true,
+        id_lokasi: true,
+        nama: true,
+        kota: true,
+        provinsi: true,
+        kapasitas: true,
+      },
+      orderBy: { nama: 'asc' },
+    });
+
+    return lokasi;
+  }
+
   // ==================== GET ANGGOTA BY LOKASI ====================
   static async getAnggotaByLokasi(lokasiId: string, userId: string, userRole: string) {
     // Verify lokasi exists
