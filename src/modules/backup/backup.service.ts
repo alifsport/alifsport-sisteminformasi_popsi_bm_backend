@@ -174,7 +174,7 @@ export class BackupService {
             foto_url: p.foto_url,
             sabuk: p.sabuk,
             tempat_melatih_id: p.tempat_melatih_id,
-            deleted_at: p.deleted_at ? new Date(p.deleted_at) : null,
+            deleted_at: null,
             tanggal_gabung: new Date(p.tanggal_gabung),
             created_at: p.created_at ? new Date(p.created_at) : undefined,
             updated_at: p.updated_at ? new Date(p.updated_at) : undefined,
@@ -193,7 +193,7 @@ export class BackupService {
         }
       }
 
-      // Anggota
+      // Anggota — clear deleted_at so all are active after restore
       for (const a of (d.anggota_profiles || [])) {
         await tx.anggota_profiles.create({
           data: {
@@ -214,7 +214,7 @@ export class BackupService {
             tempat_latihan_saat_ini_id: a.tempat_latihan_saat_ini_id,
             pelatih_pertama_id: a.pelatih_pertama_id,
             pelatih_saat_ini_id: a.pelatih_saat_ini_id,
-            deleted_at: a.deleted_at ? new Date(a.deleted_at) : null,
+            deleted_at: null,
             created_at: a.created_at ? new Date(a.created_at) : undefined,
             updated_at: a.updated_at ? new Date(a.updated_at) : undefined,
           },
