@@ -99,7 +99,7 @@ export class BackupService {
 
     // 2. Run in transaction — all or nothing
     const result = await prisma.$transaction(async (tx) => {
-      // DELETE (child → parent order)
+      // DELETE (child → parent order, respecting FK constraints)
       await tx.presensi.deleteMany();
       await tx.penugasan.deleteMany();
       await tx.prestasi.deleteMany();
@@ -131,7 +131,7 @@ export class BackupService {
         inserted.users++;
       }
 
-      // Lokasi
+      // Lokasi — insert WITHOUT pelatih_pj_id first (circular FK with pelatih)
       for (const l of (d.tempat_latihan || [])) {
         await tx.tempat_latihan.create({
           data: {
@@ -147,7 +147,7 @@ export class BackupService {
             kode_pos: l.kode_pos,
             jam_operasional: l.jam_operasional,
             kapasitas: l.kapasitas,
-            pelatih_pj_id: l.pelatih_pj_id,
+            pelatih_pj_id: null,
             foto_urls: l.foto_urls || [],
             status: l.status,
             created_at: l.created_at ? new Date(l.created_at) : undefined,
@@ -181,6 +181,16 @@ export class BackupService {
           },
         });
         inserted.pelatih++;
+      }
+
+      // Update lokasi PJ (after pelatih is inserted)
+      for (const l of (d.tempat_latihan || [])) {
+        if (l.pelatih_pj_id) {
+          await tx.tempat_latihan.update({
+            where: { id: l.id },
+            data: { pelatih_pj_id: l.pelatih_pj_id },
+          });
+        }
       }
 
       // Anggota
