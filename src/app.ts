@@ -18,6 +18,7 @@ import presensiRoutes from './modules/presensi/presensi.routes';
 import prestasiRoutes from './modules/prestasi/prestasi.routes';
 import notifikasiRoutes from './modules/notifikasi/notifikasi.routes';
 import laporanRoutes from './modules/laporan/laporan.routes';
+import backupRoutes from './modules/backup/backup.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -62,6 +63,7 @@ app.use('/api/presensi', presensiRoutes);
 app.use('/api/prestasi', prestasiRoutes);
 app.use('/api/notifikasi', notifikasiRoutes);
 app.use('/api/laporan', laporanRoutes);
+app.use('/api/backup', backupRoutes);
 
 // ==================== ERROR HANDLING ====================
 app.use(errorHandler);
