@@ -42,13 +42,6 @@ router.get(
   PelatihController.getExport
 );
 
-// GET /api/pelatih/archived - List pelatih arsip (admin)
-router.get(
-  '/archived',
-  authorize('admin'),
-  PelatihController.getArchived
-);
-
 // GET /api/pelatih/:id/delete-preview - Preview data terkait sebelum hapus permanen
 router.get(
   '/:id/delete-preview',
@@ -73,28 +66,12 @@ router.put(
   PelatihController.update
 );
 
-// DELETE /api/pelatih/:id - Nonaktifkan pelatih (admin)
+// DELETE /api/pelatih/:id - Hapus permanen pelatih (admin)
 router.delete(
   '/:id',
   authorize('admin'),
   validate(pelatihParamsSchema),
   PelatihController.delete
-);
-
-// PUT /api/pelatih/:id/restore - Pulihkan pelatih dari arsip (admin)
-router.put(
-  '/:id/restore',
-  authorize('admin'),
-  validate(pelatihParamsSchema),
-  PelatihController.restore
-);
-
-// DELETE /api/pelatih/:id/permanent - Hapus permanen pelatih (admin)
-router.delete(
-  '/:id/permanent',
-  authorize('admin'),
-  validate(pelatihParamsSchema),
-  PelatihController.permanentDelete
 );
 
 // PUT /api/pelatih/:id/status - Toggle status (admin)

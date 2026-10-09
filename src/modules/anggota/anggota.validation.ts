@@ -161,23 +161,3 @@ export const anggotaIdParamSchema = z.object({
     id: z.string().uuid('Format ID tidak valid'),
   }),
 });
-
-// ==================== Archived Query ====================
-export const archivedQuerySchema = z.object({
-  query: z.object({
-    page: z.string().optional(),
-    limit: z.string().optional(),
-    search: z.string().optional(),
-    sabuk: sabukEnum.optional(),
-    status: statusKeanggotaanEnum.optional(),
-    sort: z
-      .enum([
-        'nama_lengkap',
-        'sabuk',
-        'deleted_at',
-        'status_keanggotaan',
-      ])
-      .optional(),
-    order: z.enum(['asc', 'desc']).optional(),
-  }),
-});

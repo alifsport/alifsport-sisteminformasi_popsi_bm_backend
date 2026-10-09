@@ -10,7 +10,7 @@ export class PelatihService {
     const { page, limit, skip } = parsePaginationQuery(query);
     const { search, lokasi, sort, order } = query;
 
-    const where: any = { deleted_at: null };
+    const where: any = {};
 
     if (search) {
       where.OR = [
@@ -69,7 +69,6 @@ export class PelatihService {
     const pelatih = await prisma.pelatih_profiles.findMany({
       where: {
         id: { in: pelatihIds },
-        deleted_at: null,
       },
       select: {
         id: true,
@@ -98,7 +97,7 @@ export class PelatihService {
     let anggotaCount = 0;
     if (pelatih.tempat_melatih_id) {
       anggotaCount = await prisma.anggota_profiles.count({
-        where: { tempat_latihan_saat_ini_id: pelatih.tempat_melatih_id, deleted_at: null },
+        where: { tempat_latihan_saat_ini_id: pelatih.tempat_melatih_id },
       });
     }
 
@@ -218,57 +217,6 @@ export class PelatihService {
     return result;
   }
 
-  // ==================== DELETE (Nonaktifkan) ====================
-  static async delete(id: string) {
-    const existing = await prisma.pelatih_profiles.findUnique({ where: { id }, include: { user: true } });
-    if (!existing) throw new NotFoundError('Data pelatih tidak ditemukan');
-    if (existing.deleted_at) throw new NotFoundError('Pelatih sudah diarsipkan');
-
-    const result = await prisma.$transaction(async (tx) => {
-      // Soft delete pelatih profile
-      await tx.pelatih_profiles.update({ where: { id }, data: { deleted_at: new Date() } });
-
-      // Deactivate user login
-      await tx.users.update({ where: { id: existing.user_id }, data: { status: 'inactive' } });
-
-      await tx.audit_logs.create({
-        data: { aksi: 'delete', entitas: 'pelatih', entitas_id: existing.user_id, detail: { id_pelatih: existing.id_pelatih, nama_lengkap: existing.nama_lengkap } },
-      });
-
-      return { message: 'Pelatih berhasil diarsipkan' };
-    });
-
-    return result;
-  }
-
-  // ==================== GET ARCHIVED ====================
-  static async getArchived() {
-    return prisma.pelatih_profiles.findMany({
-      where: { deleted_at: { not: null } },
-      include: {
-        user: { select: { id: true, email: true, status: true } },
-      },
-      orderBy: { deleted_at: 'desc' },
-    });
-  }
-
-  // ==================== RESTORE ====================
-  static async restore(id: string) {
-    const existing = await prisma.pelatih_profiles.findUnique({ where: { id }, include: { user: true } });
-    if (!existing) throw new NotFoundError('Data pelatih tidak ditemukan');
-    if (!existing.deleted_at) throw new NotFoundError('Pelatih tidak dalam status arsip');
-
-    await prisma.$transaction(async (tx) => {
-      await tx.pelatih_profiles.update({ where: { id }, data: { deleted_at: null } });
-      await tx.users.update({ where: { id: existing.user_id }, data: { status: 'active' } });
-      await tx.audit_logs.create({
-        data: { aksi: 'create', entitas: 'pelatih', entitas_id: existing.user_id, detail: { id_pelatih: existing.id_pelatih, nama_lengkap: existing.nama_lengkap, action: 'restore' } },
-      }).catch(() => {});
-    });
-
-    return { message: 'Pelatih berhasil dipulihkan' };
-  }
-
   // ==================== DELETE PREVIEW (data terkait sebelum hapus permanen) ====================
   static async getDeletePreview(id: string) {
     const existing = await prisma.pelatih_profiles.findUnique({ where: { id } });
@@ -335,11 +283,10 @@ export class PelatihService {
     };
   }
 
-  // ==================== PERMANENT DELETE ====================
-  static async permanentDelete(id: string) {
+  // ==================== DELETE (Permanent) ====================
+  static async delete(id: string) {
     const existing = await prisma.pelatih_profiles.findUnique({ where: { id }, include: { user: true } });
     if (!existing) throw new NotFoundError('Data pelatih tidak ditemukan');
-    if (!existing.deleted_at) throw new NotFoundError('Hanya pelatih yang diarsipkan yang bisa dihapus permanen');
 
     await prisma.$transaction(async (tx) => {
       // 1. Delete presensi records linked to this pelatih's jadwal
@@ -402,7 +349,7 @@ export class PelatihService {
     }
 
     const anggotaList = await prisma.anggota_profiles.findMany({
-      where: { tempat_latihan_saat_ini_id: pelatih.tempat_melatih_id, deleted_at: null },
+      where: { tempat_latihan_saat_ini_id: pelatih.tempat_melatih_id },
       include: { user: { select: { id: true, email: true, status: true } } },
       orderBy: { nama_lengkap: 'asc' },
     });

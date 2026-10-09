@@ -32,21 +32,6 @@ export class AnggotaController {
     }
   }
 
-  // GET /api/anggota/archived - List archived (soft-deleted) anggota
-  static async getArchived(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const result = await AnggotaService.getArchived(req.query);
-      res.json({
-        success: true,
-        message: 'Daftar anggota terarsipkan berhasil diambil',
-        data: result.data,
-        pagination: result.pagination,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
   // GET /api/anggota/export - Export anggota data
   static async getExport(req: AuthRequest, res: Response, next: NextFunction) {
     try {
@@ -110,44 +95,29 @@ export class AnggotaController {
     }
   }
 
-  // DELETE /api/anggota/:id - Soft delete anggota
+  // DELETE /api/anggota/:id - Permanent delete anggota
   static async delete(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      await AnggotaService.delete(id);
+      const result = await AnggotaService.delete(id);
       res.json({
         success: true,
-        message: 'Anggota berhasil diarsipkan',
+        message: result.message,
       });
     } catch (error) {
       next(error);
     }
   }
 
-  // POST /api/anggota/bulk-delete - Bulk soft delete
+  // POST /api/anggota/bulk-delete - Bulk permanent delete
   static async bulkDelete(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { ids } = req.body;
       const result = await AnggotaService.bulkDelete(ids);
       res.json({
         success: true,
-        message: `${result.deleted} anggota berhasil diarsipkan`,
+        message: `${result.deleted} anggota berhasil dihapus permanen`,
         data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  // POST /api/anggota/:id/restore - Restore soft-deleted anggota
-  static async restore(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
-      const restored = await AnggotaService.restore(id);
-      res.json({
-        success: true,
-        message: 'Anggota berhasil dipulihkan',
-        data: restored,
       });
     } catch (error) {
       next(error);

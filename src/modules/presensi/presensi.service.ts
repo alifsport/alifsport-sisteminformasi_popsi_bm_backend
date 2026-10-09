@@ -6,7 +6,7 @@ export class PresensiService {
   // ==================== GET LOKASI SAJA (PJ only) ====================
   static async getLokasiSaya(userId: string) {
     const pelatih = await prisma.pelatih_profiles.findFirst({
-      where: { user_id: userId, deleted_at: null },
+      where: { user_id: userId },
       select: { id: true },
     });
     if (!pelatih) throw new NotFoundError('Profil pelatih tidak ditemukan');
@@ -57,7 +57,6 @@ export class PresensiService {
       where: {
         tempat_latihan_saat_ini_id: lokasiId,
         status_keanggotaan: 'Aktif',
-        deleted_at: null,
       },
       select: {
         id: true,
@@ -99,11 +98,10 @@ export class PresensiService {
     for (const item of presensiData) {
       const anggota = await prisma.anggota_profiles.findUnique({
         where: { id: item.anggota_id },
-        select: { id: true, tempat_latihan_saat_ini_id: true, status_keanggotaan: true, deleted_at: true },
+        select: { id: true, tempat_latihan_saat_ini_id: true, status_keanggotaan: true },
       });
 
       if (!anggota) throw new NotFoundError(`Anggota ${item.anggota_id} tidak ditemukan`);
-      if (anggota.deleted_at) throw new AppError(`Anggota ${item.anggota_id} sudah diarsipkan`, 400);
       if (anggota.status_keanggotaan !== 'Aktif') throw new AppError(`Anggota ${item.anggota_id} tidak aktif`, 400);
       if (anggota.tempat_latihan_saat_ini_id !== lokasiId) {
         throw new ForbiddenError(`Anggota ${item.anggota_id} bukan dari lokasi ini`);

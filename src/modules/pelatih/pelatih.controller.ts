@@ -87,43 +87,11 @@ export class PelatihController {
     }
   }
 
-  // DELETE /api/pelatih/:id - Nonaktifkan pelatih (admin)
+  // DELETE /api/pelatih/:id - Hapus permanen pelatih (admin)
   static async delete(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const data = await PelatihService.delete(id);
-      res.json({ success: true, message: 'Pelatih berhasil diarsipkan', data });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  // GET /api/pelatih/archived - List pelatih yang diarsipkan (admin)
-  static async getArchived(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const data = await PelatihService.getArchived();
-      res.json({ success: true, data });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  // PUT /api/pelatih/:id/restore - Pulihkan pelatih dari arsip (admin)
-  static async restore(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
-      const data = await PelatihService.restore(id);
-      res.json({ success: true, ...data });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  // DELETE /api/pelatih/:id/permanent - Hapus permanen pelatih (admin)
-  static async permanentDelete(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
-      const data = await PelatihService.permanentDelete(id);
       res.json({ success: true, ...data });
     } catch (error) {
       next(error);

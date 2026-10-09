@@ -40,9 +40,7 @@ export class LaporanService {
         kota: true,
         _count: {
           select: {
-            anggota_saat_ini: {
-              where: { deleted_at: null },
-            },
+            anggota_saat_ini: true,
           },
         },
       },
@@ -178,7 +176,6 @@ export class LaporanService {
       ? await prisma.anggota_profiles.count({
           where: {
             tempat_latihan_saat_ini_id: pelatih.tempat_latihan_id,
-            deleted_at: null,
           },
         })
       : 0;

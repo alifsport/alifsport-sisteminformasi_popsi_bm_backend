@@ -10,7 +10,7 @@ export class AnggotaService {
     const { page, limit, skip } = parsePaginationQuery(query);
     const { search, sabuk, status, lokasi, tanggal_gabung_from, tanggal_gabung_to, sort, order } = query;
 
-    const where: any = { deleted_at: null };
+    const where: any = {};
 
     if (search) {
       where.OR = [
@@ -222,7 +222,6 @@ export class AnggotaService {
 
     const existing = await prisma.anggota_profiles.findUnique({ where: { id } });
     if (!existing) throw new NotFoundError('Anggota tidak ditemukan');
-    if (existing.deleted_at) throw new NotFoundError('Anggota yang sudah diarsipkan tidak dapat diupdate');
 
     // Check email uniqueness if changed
     if (data.email_pribadi && data.email_pribadi !== existing.email_pribadi) {
@@ -282,112 +281,63 @@ export class AnggotaService {
     return updated;
   }
 
-  // ==================== DELETE (Soft Delete) ====================
+  // ==================== DELETE (Permanent) ====================
   static async delete(id: string) {
     const existing = await prisma.anggota_profiles.findUnique({ where: { id } });
     if (!existing) throw new NotFoundError('Anggota tidak ditemukan');
-    if (existing.deleted_at) throw new NotFoundError('Anggota sudah diarsipkan sebelumnya');
 
-    const updated = await prisma.anggota_profiles.update({
-      where: { id },
-      data: { deleted_at: new Date() },
+    await prisma.$transaction(async (tx) => {
+      // Children first (FK restrict)
+      await tx.presensi.deleteMany({ where: { anggota_id: id } });
+      await tx.penugasan.deleteMany({ where: { anggota_id: id } });
+      await tx.prestasi.deleteMany({ where: { anggota_id: id } });
+      await tx.anggota_profiles.delete({ where: { id } });
+      await tx.users.delete({ where: { id: existing.user_id } });
+
+      await tx.audit_logs.create({
+        data: {
+          aksi: 'delete',
+          entitas: 'anggota_profiles',
+          entitas_id: id,
+          detail: { id_anggota: existing.id_anggota, nama_lengkap: existing.nama_lengkap, permanent: true },
+        },
+      });
     });
 
-    await prisma.audit_logs.create({
-      data: {
-        aksi: 'delete',
-        entitas: 'anggota_profiles',
-        entitas_id: id,
-        detail: { id_anggota: existing.id_anggota, nama_lengkap: existing.nama_lengkap },
-      },
-    });
-
-    return updated;
+    return { message: 'Anggota berhasil dihapus permanen' };
   }
 
-  // ==================== BULK DELETE ====================
+  // ==================== BULK DELETE (Permanent) ====================
   static async bulkDelete(ids: string[]) {
     if (!ids || ids.length === 0) throw new Error('Pilih minimal 1 anggota untuk dihapus');
 
     const existing = await prisma.anggota_profiles.findMany({
-      where: { id: { in: ids }, deleted_at: null },
+      where: { id: { in: ids } },
     });
 
-    if (existing.length === 0) throw new NotFoundError('Tidak ada anggota yang bisa diarsipkan');
+    if (existing.length === 0) throw new NotFoundError('Tidak ada anggota yang bisa dihapus');
+    const idList = existing.map(a => a.id);
 
-    const result = await prisma.anggota_profiles.updateMany({
-      where: { id: { in: existing.map(a => a.id) } },
-      data: { deleted_at: new Date() },
+    await prisma.$transaction(async (tx) => {
+      await tx.presensi.deleteMany({ where: { anggota_id: { in: idList } } });
+      await tx.penugasan.deleteMany({ where: { anggota_id: { in: idList } } });
+      await tx.prestasi.deleteMany({ where: { anggota_id: { in: idList } } });
+      await tx.anggota_profiles.deleteMany({ where: { id: { in: idList } } });
+      await tx.users.deleteMany({ where: { id: { in: existing.map(a => a.user_id) } } });
+
+      for (const a of existing) {
+        await tx.audit_logs.create({
+          data: {
+            aksi: 'delete',
+            entitas: 'anggota_profiles',
+            entitas_id: a.id,
+            detail: { id_anggota: a.id_anggota, nama_lengkap: a.nama_lengkap, bulk: true, permanent: true },
+          },
+        }).catch(() => {});
+      }
     });
 
-    // Audit log for each
-    for (const a of existing) {
-      await prisma.audit_logs.create({
-        data: {
-          aksi: 'delete',
-          entitas: 'anggota_profiles',
-          entitas_id: a.id,
-          detail: { id_anggota: a.id_anggota, nama_lengkap: a.nama_lengkap, bulk: true },
-        },
-      }).catch(() => {});
-    }
-
-    return { deleted: result.count };
-  }
-
-  // ==================== RESTORE ====================
-  static async restore(id: string) {
-    const existing = await prisma.anggota_profiles.findUnique({ where: { id } });
-    if (!existing) throw new NotFoundError('Anggota tidak ditemukan');
-    if (!existing.deleted_at) throw new NotFoundError('Anggota tidak dalam status terarsipkan');
-
-    const updated = await prisma.anggota_profiles.update({
-      where: { id },
-      data: { deleted_at: null },
-    });
-
-    await prisma.audit_logs.create({
-      data: {
-        aksi: 'restore',
-        entitas: 'anggota_profiles',
-        entitas_id: id,
-        detail: { id_anggota: existing.id_anggota, nama_lengkap: existing.nama_lengkap },
-      },
-    });
-
-    return updated;
-  }
-
-  // ==================== GET ARCHIVED ====================
-  static async getArchived(query: any) {
-    const { page, limit, skip } = parsePaginationQuery(query);
-    const { search, sabuk, status, sort, order } = query;
-
-    const where: any = { deleted_at: { not: null } };
-
-    if (search) {
-      where.OR = [
-        { nama_lengkap: { contains: search, mode: 'insensitive' } },
-        { id_anggota: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-
-    if (sabuk) where.sabuk = sabuk;
-    if (status) where.status_keanggotaan = status;
-
-    const orderBy: any = {};
-    if (sort) orderBy[sort] = order || 'desc';
-    else orderBy.deleted_at = 'desc';
-
-    const [data, total] = await Promise.all([
-      prisma.anggota_profiles.findMany({ where, orderBy, skip, take: limit }),
-      prisma.anggota_profiles.count({ where }),
-    ]);
-
-    return {
-      data,
-      pagination: { page, limit, total, totalPages: calculateTotalPages(total, limit) },
-    };
+    return { deleted: idList.length };
   }
 
   // ==================== GET STATS ====================
@@ -396,17 +346,15 @@ export class AnggotaService {
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [totalActive, totalArchived, bySabuk, byStatus, newThisMonth] = await Promise.all([
-      prisma.anggota_profiles.count({ where: { deleted_at: null } }),
-      prisma.anggota_profiles.count({ where: { deleted_at: { not: null } } }),
-      prisma.anggota_profiles.groupBy({ by: ['sabuk'], where: { deleted_at: null }, _count: { id: true } }),
-      prisma.anggota_profiles.groupBy({ by: ['status_keanggotaan'], where: { deleted_at: null }, _count: { id: true } }),
-      prisma.anggota_profiles.count({ where: { deleted_at: null, tanggal_gabung: { gte: startOfMonth } } }),
+    const [totalActive, bySabuk, byStatus, newThisMonth] = await Promise.all([
+      prisma.anggota_profiles.count(),
+      prisma.anggota_profiles.groupBy({ by: ['sabuk'], _count: { id: true } }),
+      prisma.anggota_profiles.groupBy({ by: ['status_keanggotaan'], _count: { id: true } }),
+      prisma.anggota_profiles.count({ where: { tanggal_gabung: { gte: startOfMonth } } }),
     ]);
 
     return {
       total_active: totalActive,
-      total_archived: totalArchived,
       by_sabuk: bySabuk.map((item) => ({ sabuk: item.sabuk, count: item._count.id })),
       by_status: byStatus.map((item) => ({ status: item.status_keanggotaan, count: item._count.id })),
       new_this_month: newThisMonth,
@@ -417,7 +365,7 @@ export class AnggotaService {
   static async getExport(query: any) {
     const { search, sabuk, status, lokasi, tanggal_gabung_from, tanggal_gabung_to } = query;
 
-    const where: any = { deleted_at: null };
+    const where: any = {};
 
     if (search) {
       where.OR = [

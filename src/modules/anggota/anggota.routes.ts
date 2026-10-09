@@ -8,7 +8,6 @@ import {
   updateAnggotaSchema,
   anggotaQuerySchema,
   anggotaIdParamSchema,
-  archivedQuerySchema,
 } from './anggota.validation';
 
 const router = Router();
@@ -26,9 +25,6 @@ router.post('/', validate(createAnggotaSchema), AnggotaController.create);
 // GET /api/anggota/stats - Statistics overview
 router.get('/stats', AnggotaController.getStats);
 
-// GET /api/anggota/archived - List soft-deleted anggota
-router.get('/archived', validate(archivedQuerySchema), AnggotaController.getArchived);
-
 // GET /api/anggota/export - Export anggota data
 router.get('/export', validate(anggotaQuerySchema), AnggotaController.getExport);
 
@@ -38,13 +34,10 @@ router.get('/:id', validate(anggotaIdParamSchema), AnggotaController.getById);
 // PUT /api/anggota/:id - Update anggota
 router.put('/:id', validate(updateAnggotaSchema), AnggotaController.update);
 
-// DELETE /api/anggota/:id - Soft delete (archive) anggota
+// DELETE /api/anggota/:id - Permanent delete anggota
 router.delete('/:id', validate(anggotaIdParamSchema), AnggotaController.delete);
 
-// POST /api/anggota/bulk-delete - Bulk soft delete
+// POST /api/anggota/bulk-delete - Bulk permanent delete
 router.post('/bulk-delete', AnggotaController.bulkDelete);
-
-// POST /api/anggota/:id/restore - Restore archived anggota
-router.post('/:id/restore', validate(anggotaIdParamSchema), AnggotaController.restore);
 
 export default router;
