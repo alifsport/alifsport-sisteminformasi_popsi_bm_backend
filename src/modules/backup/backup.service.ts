@@ -280,13 +280,12 @@ export class BackupService {
             status: p.status,
             created_by: p.created_by,
             created_at: p.created_at ? new Date(p.created_at) : undefined,
-            updated_at: p.updated_at ? new Date(p.updated_at) : undefined,
           },
         });
         inserted.penugasan++;
       }
 
-      // Prestasi
+      // Prestasi (kompatibel backup lama: peringkat→perolehan, tempat→lokasi_kejuaraan)
       for (const p of (d.prestasi || [])) {
         await tx.prestasi.create({
           data: {
@@ -294,18 +293,19 @@ export class BackupService {
             anggota_id: p.anggota_id,
             nama_kejuaraan: p.nama_kejuaraan,
             tingkat: p.tingkat,
-            peringkat: p.peringkat,
             tanggal: new Date(p.tanggal),
-            tempat: p.tempat,
+            perolehan: p.perolehan || p.peringkat || '-',
+            kategori: p.kategori || '-',
+            lokasi_kejuaraan: p.lokasi_kejuaraan || p.tempat || '-',
             catatan: p.catatan,
+            file_url: p.file_url,
             created_at: p.created_at ? new Date(p.created_at) : undefined,
-            updated_at: p.updated_at ? new Date(p.updated_at) : undefined,
           },
         });
         inserted.prestasi++;
       }
 
-      // Notifications
+      // Notifications (kompatibel backup lama: is_read→dibaca)
       for (const n of (d.notifications || [])) {
         await tx.notifications.create({
           data: {
@@ -314,7 +314,8 @@ export class BackupService {
             judul: n.judul,
             pesan: n.pesan,
             tipe: n.tipe,
-            is_read: n.is_read,
+            link: n.link,
+            dibaca: n.dibaca ?? n.is_read ?? false,
             created_at: n.created_at ? new Date(n.created_at) : undefined,
           },
         }).catch(() => {});

@@ -61,6 +61,8 @@ export class BackupController {
         data: result,
       });
     } catch (error) {
+      console.error('=== RESTORE ERROR ===');
+      console.error(error);
       next(error);
     }
   }
