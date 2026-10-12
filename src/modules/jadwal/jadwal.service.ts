@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '../../config/database';
-import { NotFoundError, ForbiddenError } from '../../middleware/errorHandler';
+import { AppError, NotFoundError, ForbiddenError } from '../../middleware/errorHandler';
 import { parsePaginationQuery, calculateTotalPages } from '../../utils/helpers';
 
 export class JadwalService {
