@@ -6,7 +6,7 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "echo 'Using ts-node, no build needed'",
+    "build": "prisma generate",
     "seed": "ts-node seed-production.ts",
     "start": "ts-node --transpile-only src/app.ts",
     "lint": "eslint src --ext .ts",
