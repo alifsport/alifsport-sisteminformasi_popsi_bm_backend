@@ -172,13 +172,21 @@ export class LaporanService {
     const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
     // Total anggota di lokasi pelatih
-    const totalAnggota = pelatih.tempat_latihan_id
+    const totalAnggota = pelatih.tempat_melatih_id
       ? await prisma.anggota_profiles.count({
           where: {
-            tempat_latihan_saat_ini_id: pelatih.tempat_latihan_id,
+            tempat_latihan_saat_ini_id: pelatih.tempat_melatih_id,
           },
         })
       : 0;
+
+    // Total uang kas lokasi pelatih
+    const uangKas = pelatih.tempat_melatih_id
+      ? await prisma.presensi.aggregate({
+          where: { jadwal: { tempat_id: pelatih.tempat_melatih_id } },
+          _sum: { uang_kas: true },
+        })
+      : { _sum: { uang_kas: null } };
 
     // Jadwal hari ini
     const jadwalHariIni = await prisma.jadwal_latihan.findMany({
@@ -232,6 +240,7 @@ export class LaporanService {
         nama_lengkap: pelatih.nama_lengkap,
       },
       totalAnggota,
+      totalUangKas: uangKas._sum.uang_kas || 0,
       jadwalHariIni: jadwalHariIni.map((j) => ({
         id: j.id,
         judul_materi: j.judul_materi,

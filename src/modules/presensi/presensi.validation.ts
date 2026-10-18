@@ -4,6 +4,7 @@ const presensiItemSchema = z.object({
   anggota_id: z.string().uuid(),
   status: z.enum(['Hadir', 'Sakit', 'Alpa', 'Terlambat']),
   keterangan: z.string().optional(),
+  uang_kas: z.number().int().min(0).max(1000000000).optional().nullable(),
 });
 
 export const inputPresensiSchema = z.object({

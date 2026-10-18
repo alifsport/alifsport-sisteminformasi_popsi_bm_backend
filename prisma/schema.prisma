@@ -293,6 +293,7 @@ model presensi {
   status          StatusPresensi
   keterangan      String?         @db.Text
   catatan_umum    String?         @db.Text
+  uang_kas        Int?            // Iuran kas anggota pada sesi presensi ini (Rupiah)
   input_oleh      String          @db.Uuid
   waktu_input     DateTime        @default(now()) @db.Timestamptz
   created_at      DateTime        @default(now()) @db.Timestamptz

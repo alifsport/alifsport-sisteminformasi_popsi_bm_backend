@@ -124,6 +124,7 @@ export class PresensiService {
           status: item.status,
           keterangan: item.keterangan || null,
           catatan_umum: catatanUmum || null,
+          uang_kas: item.uang_kas ?? null,
           input_oleh: userId,
         },
         create: {
@@ -133,6 +134,7 @@ export class PresensiService {
           status: item.status,
           keterangan: item.keterangan || null,
           catatan_umum: catatanUmum || null,
+          uang_kas: item.uang_kas ?? null,
           input_oleh: userId,
         },
       });

@@ -258,6 +258,7 @@ export class BackupService {
             status: p.status,
             keterangan: p.keterangan,
             catatan_umum: p.catatan_umum,
+            uang_kas: p.uang_kas ?? null,
             input_oleh: p.input_oleh,
             waktu_input: p.waktu_input ? new Date(p.waktu_input) : undefined,
             created_at: p.created_at ? new Date(p.created_at) : undefined,

@@ -140,6 +140,12 @@ export class LokasiService {
       throw new NotFoundError('Lokasi tidak ditemukan');
     }
 
+    // Total uang kas lokasi ini (SUM presensi.uang_kas via jadwal)
+    const kas = await prisma.presensi.aggregate({
+      where: { jadwal: { tempat_id: id } },
+      _sum: { uang_kas: true },
+    });
+
     return {
       ...lokasi,
       anggota_count: lokasi.penugasan.length,
@@ -148,6 +154,7 @@ export class LokasiService {
       anggota_list: lokasi.penugasan.map((p) => p.anggota),
       penugasan: undefined,
       jadwal_count: lokasi._count.jadwal_latihan,
+      total_uang_kas: kas._sum.uang_kas || 0,
       _count: undefined,
     };
   }
