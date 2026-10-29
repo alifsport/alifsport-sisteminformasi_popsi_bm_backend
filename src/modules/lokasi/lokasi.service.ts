@@ -140,11 +140,13 @@ export class LokasiService {
       throw new NotFoundError('Lokasi tidak ditemukan');
     }
 
-    // Total uang kas lokasi ini (SUM presensi.uang_kas via jadwal)
-    const kas = await prisma.presensi.aggregate({
-      where: { jadwal: { tempat_id: id } },
-      _sum: { uang_kas: true },
-    });
+    // Total uang kas lokasi ini (raw SQL — tahan Prisma client basi)
+    const kasRows = await prisma.$queryRaw<any[]>`
+      SELECT COALESCE(SUM(p.uang_kas), 0)::int AS total
+      FROM presensi p
+      JOIN jadwal_latihan j ON j.id = p.jadwal_id
+      WHERE j.tempat_id = ${id}::uuid`;
+    const totalUangKas = kasRows[0]?.total ?? 0;
 
     return {
       ...lokasi,
@@ -154,7 +156,7 @@ export class LokasiService {
       anggota_list: lokasi.penugasan.map((p) => p.anggota),
       penugasan: undefined,
       jadwal_count: lokasi._count.jadwal_latihan,
-      total_uang_kas: kas._sum.uang_kas || 0,
+      total_uang_kas: totalUangKas,
       _count: undefined,
     };
   }

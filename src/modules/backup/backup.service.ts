@@ -247,24 +247,24 @@ export class BackupService {
         inserted.jadwal++;
       }
 
-      // Presensi
+      // Presensi (raw SQL — tahan Prisma client basi)
       for (const p of (d.presensi || [])) {
-        await tx.presensi.create({
-          data: {
-            id: p.id,
-            jadwal_id: p.jadwal_id,
-            anggota_id: p.anggota_id,
-            tanggal: new Date(p.tanggal),
-            status: p.status,
-            keterangan: p.keterangan,
-            catatan_umum: p.catatan_umum,
-            uang_kas: p.uang_kas ?? null,
-            input_oleh: p.input_oleh,
-            waktu_input: p.waktu_input ? new Date(p.waktu_input) : undefined,
-            created_at: p.created_at ? new Date(p.created_at) : undefined,
-            updated_at: p.updated_at ? new Date(p.updated_at) : undefined,
-          },
-        });
+        await tx.$executeRaw`
+          INSERT INTO presensi (id, jadwal_id, anggota_id, tanggal, status, keterangan, catatan_umum, uang_kas, input_oleh, waktu_input, created_at, updated_at)
+          VALUES (
+            ${p.id}::uuid,
+            ${p.jadwal_id}::uuid,
+            ${p.anggota_id}::uuid,
+            ${new Date(p.tanggal)},
+            CAST(${p.status} AS "StatusPresensi"),
+            ${p.keterangan ?? null},
+            ${p.catatan_umum ?? null},
+            ${p.uang_kas ?? null},
+            ${p.input_oleh}::uuid,
+            ${p.waktu_input ? new Date(p.waktu_input) : new Date()},
+            ${p.created_at ? new Date(p.created_at) : new Date()},
+            ${p.updated_at ? new Date(p.updated_at) : new Date()}
+          )`;
         inserted.presensi++;
       }
 

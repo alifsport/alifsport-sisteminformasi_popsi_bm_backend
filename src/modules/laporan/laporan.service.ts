@@ -180,13 +180,16 @@ export class LaporanService {
         })
       : 0;
 
-    // Total uang kas lokasi pelatih
-    const uangKas = pelatih.tempat_melatih_id
-      ? await prisma.presensi.aggregate({
-          where: { jadwal: { tempat_id: pelatih.tempat_melatih_id } },
-          _sum: { uang_kas: true },
-        })
-      : { _sum: { uang_kas: null } };
+    // Total uang kas lokasi pelatih (raw SQL — tahan Prisma client basi)
+    let totalUangKas = 0;
+    if (pelatih.tempat_melatih_id) {
+      const kasRows = await prisma.$queryRaw<any[]>`
+        SELECT COALESCE(SUM(p.uang_kas), 0)::int AS total
+        FROM presensi p
+        JOIN jadwal_latihan j ON j.id = p.jadwal_id
+        WHERE j.tempat_id = ${pelatih.tempat_melatih_id}::uuid`;
+      totalUangKas = kasRows[0]?.total ?? 0;
+    }
 
     // Jadwal hari ini
     const jadwalHariIni = await prisma.jadwal_latihan.findMany({
@@ -240,7 +243,7 @@ export class LaporanService {
         nama_lengkap: pelatih.nama_lengkap,
       },
       totalAnggota,
-      totalUangKas: uangKas._sum.uang_kas || 0,
+      totalUangKas,
       jadwalHariIni: jadwalHariIni.map((j) => ({
         id: j.id,
         judul_materi: j.judul_materi,

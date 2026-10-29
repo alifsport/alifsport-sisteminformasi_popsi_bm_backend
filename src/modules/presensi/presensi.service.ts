@@ -108,37 +108,33 @@ export class PresensiService {
       }
     }
 
-    // 4. Upsert each presensi
+    // 4. Upsert each presensi (raw SQL — tidak tergantung versi Prisma client di server)
     const tanggalDate = new Date(tanggal);
     const results = [];
     for (const item of presensiData) {
-      const result = await prisma.presensi.upsert({
-        where: {
-          jadwal_id_anggota_id_tanggal: {
-            jadwal_id: jadwalId,
-            anggota_id: item.anggota_id,
-            tanggal: tanggalDate,
-          },
-        },
-        update: {
-          status: item.status,
-          keterangan: item.keterangan || null,
-          catatan_umum: catatanUmum || null,
-          uang_kas: item.uang_kas ?? null,
-          input_oleh: userId,
-        },
-        create: {
-          jadwal_id: jadwalId,
-          anggota_id: item.anggota_id,
-          tanggal: tanggalDate,
-          status: item.status,
-          keterangan: item.keterangan || null,
-          catatan_umum: catatanUmum || null,
-          uang_kas: item.uang_kas ?? null,
-          input_oleh: userId,
-        },
-      });
-      results.push(result);
+      const rows = await prisma.$queryRaw<any[]>`
+        INSERT INTO presensi (id, jadwal_id, anggota_id, tanggal, status, keterangan, catatan_umum, uang_kas, input_oleh)
+        VALUES (
+          gen_random_uuid(),
+          ${jadwalId}::uuid,
+          ${item.anggota_id}::uuid,
+          ${tanggalDate},
+          CAST(${item.status} AS "StatusPresensi"),
+          ${item.keterangan || null},
+          ${catatanUmum || null},
+          ${item.uang_kas ?? null},
+          ${userId}::uuid
+        )
+        ON CONFLICT (jadwal_id, anggota_id, tanggal)
+        DO UPDATE SET
+          status = EXCLUDED.status,
+          keterangan = EXCLUDED.keterangan,
+          catatan_umum = EXCLUDED.catatan_umum,
+          uang_kas = EXCLUDED.uang_kas,
+          input_oleh = EXCLUDED.input_oleh,
+          updated_at = now()
+        RETURNING *`;
+      results.push(rows[0]);
     }
 
     // 5. Audit log

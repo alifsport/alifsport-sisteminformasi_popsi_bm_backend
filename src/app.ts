@@ -47,6 +47,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     success: true,
     message: 'Server is running',
+    version: '2026-10-29-presensi-raw',
     timestamp: new Date().toISOString(),
   });
 });
