@@ -153,17 +153,35 @@ export class PresensiService {
 
   // ==================== GET BY JADWAL ====================
   static async getByJadwal(jadwalId: string, tanggal?: string) {
-    const where: any = { jadwal_id: jadwalId };
-    if (tanggal) {
-      where.tanggal = new Date(tanggal);
-    }
-    return prisma.presensi.findMany({
-      where,
-      include: {
-        anggota: { select: { id: true, id_anggota: true, nama_lengkap: true, sabuk: true } },
-      },
-      orderBy: { created_at: 'desc' },
-    });
+    // Raw SQL — tahan Prisma client basi (kolom uang_kas harus selalu terbaca)
+    const rows = tanggal
+      ? await prisma.$queryRaw<any[]>`
+          SELECT p.*, a.id AS a_id, a.id_anggota AS a_id_anggota, a.nama_lengkap AS a_nama, a.sabuk AS a_sabuk
+          FROM presensi p
+          JOIN anggota_profiles a ON a.id = p.anggota_id
+          WHERE p.jadwal_id = ${jadwalId}::uuid AND p.tanggal = ${new Date(tanggal)}
+          ORDER BY p.created_at DESC`
+      : await prisma.$queryRaw<any[]>`
+          SELECT p.*, a.id AS a_id, a.id_anggota AS a_id_anggota, a.nama_lengkap AS a_nama, a.sabuk AS a_sabuk
+          FROM presensi p
+          JOIN anggota_profiles a ON a.id = p.anggota_id
+          WHERE p.jadwal_id = ${jadwalId}::uuid
+          ORDER BY p.created_at DESC`;
+    return rows.map(r => ({
+      id: r.id,
+      jadwal_id: r.jadwal_id,
+      anggota_id: r.anggota_id,
+      tanggal: r.tanggal,
+      status: r.status,
+      keterangan: r.keterangan,
+      catatan_umum: r.catatan_umum,
+      uang_kas: r.uang_kas,
+      input_oleh: r.input_oleh,
+      waktu_input: r.waktu_input,
+      created_at: r.created_at,
+      updated_at: r.updated_at,
+      anggota: { id: r.a_id, id_anggota: r.a_id_anggota, nama_lengkap: r.a_nama, sabuk: r.a_sabuk },
+    }));
   }
 
   // ==================== UPDATE ====================
